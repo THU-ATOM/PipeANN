@@ -4,7 +4,7 @@
 #pragma once
 
 #include "utils.h"
-#include <immintrin.h>
+#include <sse2neon.h>
 #include <sstream>
 #include <string_view>
 

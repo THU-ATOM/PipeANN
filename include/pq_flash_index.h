@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 #pragma once
-#include <immintrin.h>
+#include <sse2neon.h>
 #include <cassert>
 #include <cstdint>
 #include <string>
@@ -296,7 +296,7 @@ namespace diskann {
           auto [id, loc, sector_buf] = frontier_nhood;
           char *node_disk_buf = parent->offset_to_loc(sector_buf, loc);
           unsigned *node_buf = parent->offset_to_node_nhood(node_disk_buf);
-          _u64 nnbrs = (_u64) (*node_buf);
+          _u64 nnbrs = (_u64)(*node_buf);
           T *node_fp_coords = parent->offset_to_node_coords(node_disk_buf);
 
           T *node_fp_coords_copy = data_buf + (data_buf_idx * parent->aligned_dim);

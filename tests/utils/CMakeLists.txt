@@ -99,7 +99,7 @@ if(MSVC)
 	target_link_libraries(calculate_recall debug ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG}/diskann_dll.lib)
 	target_link_libraries(calculate_recall optimized ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/diskann_dll.lib)
 else() 
-	target_link_libraries(calculate_recall ${PROJECT_NAME} aio -ltcmalloc)
+	target_link_libraries(calculate_recall ${PROJECT_NAME} -l:libaio.so.1 -ltcmalloc)
 endif()
 
 
@@ -109,7 +109,7 @@ if(MSVC)
 	target_link_libraries(compute_groundtruth debug ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG}/diskann_dll.lib)
 	target_link_libraries(compute_groundtruth optimized ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/diskann_dll.lib)
 else() 
-	target_link_libraries(compute_groundtruth ${PROJECT_NAME} aio)
+	target_link_libraries(compute_groundtruth ${PROJECT_NAME} -l:libaio.so.1)
 endif()
 
 
@@ -157,7 +157,7 @@ if(MSVC)
 	target_link_libraries(merge_shards debug ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG}/diskann_dll.lib)
 	target_link_libraries(merge_shards optimized ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/diskann_dll.lib)
 else() 
-	target_link_libraries(merge_shards ${PROJECT_NAME} -ltcmalloc aio)
+	target_link_libraries(merge_shards ${PROJECT_NAME} -ltcmalloc -l:libaio.so.1)
 endif()
 
 add_executable(create_disk_layout create_disk_layout.cpp)
@@ -166,7 +166,7 @@ if(MSVC)
 	target_link_libraries(create_disk_layout debug ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG}/diskann_dll.lib ${PROJECT_SOURCE_DIR}/dependencies/windows/tcmalloc/libtcmalloc_minimal.lib)
 	target_link_libraries(create_disk_layout optimized ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/diskann_dll.lib ${PROJECT_SOURCE_DIR}/dependencies/windows/tcmalloc/libtcmalloc_minimal.lib)
 else() 
-	target_link_libraries(create_disk_layout ${PROJECT_NAME} aio -ltcmalloc)
+	target_link_libraries(create_disk_layout ${PROJECT_NAME} -l:libaio.so.1 -ltcmalloc)
 endif()
 
 

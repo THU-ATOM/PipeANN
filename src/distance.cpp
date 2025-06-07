@@ -4,7 +4,7 @@
 #include <tmmintrin.h>
 #include <intrin.h>
 #else
-#include <immintrin.h>
+#include <sse2neon.h>
 #endif
 
 #include <cosine_similarity.h>
@@ -560,14 +560,14 @@ namespace diskann {
 #else
 #pragma omp simd reduction(+ : result) aligned(a, b : 8)
     for (_s32 i = 0; i < (_s32) size; i++) {
-      result += ((int32_t) ((int16_t) a[i] - (int16_t) b[i])) * ((int32_t) ((int16_t) a[i] - (int16_t) b[i]));
+      result += ((int32_t)((int16_t) a[i] - (int16_t) b[i])) * ((int32_t)((int16_t) a[i] - (int16_t) b[i]));
     }
     return (float) result;
 #endif
 #else
 #pragma omp simd reduction(+ : result) aligned(a, b : 8)
     for (int32_t i = 0; i < (int32_t) size; i++) {
-      result += ((int32_t) ((int16_t) a[i] - (int16_t) b[i])) * ((int32_t) ((int16_t) a[i] - (int16_t) b[i]));
+      result += ((int32_t)((int16_t) a[i] - (int16_t) b[i])) * ((int32_t)((int16_t) a[i] - (int16_t) b[i]));
     }
     return (float) result;
 #endif
@@ -579,7 +579,7 @@ namespace diskann {
 #pragma omp simd reduction(+ : result) aligned(a, b : 8)
 #endif
     for (int32_t i = 0; i < (int32_t) size; i++) {
-      result += ((int32_t) ((int16_t) a[i] - (int16_t) b[i])) * ((int32_t) ((int16_t) a[i] - (int16_t) b[i]));
+      result += ((int32_t)((int16_t) a[i] - (int16_t) b[i])) * ((int32_t)((int16_t) a[i] - (int16_t) b[i]));
     }
     return (float) result;
   }
@@ -595,7 +595,7 @@ namespace diskann {
     float result = 0;
 #ifdef USE_AVX2
     // assume size is divisible by 8
-    uint16_t niters = (uint16_t) (size / 8);
+    uint16_t niters = (uint16_t)(size / 8);
     __m256 sum = _mm256_setzero_ps();
     for (uint16_t j = 0; j < niters; j++) {
       // scope is a[8j:8j+7], b[8j:8j+7]
@@ -625,7 +625,7 @@ namespace diskann {
 #ifndef _WINDOWS
 #pragma omp simd reduction(+ : result) aligned(a, b : 32)
 #endif
-    for (_s32 i = 0; i < (_s32) size; i++) {
+    for (int32_t i = 0; i < static_cast<int32_t>(size); i++) {
       result += (a[i] - b[i]) * (a[i] - b[i]);
     }
 #endif

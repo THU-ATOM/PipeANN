@@ -14,7 +14,6 @@
 #include "aux_utils.h"
 #include "cached_io.h"
 #include "index.h"
-#include "mkl/mkl.h"
 #include "omp.h"
 #include "partition_and_pq.h"
 #include "percentile_stats.h"
@@ -92,7 +91,7 @@ namespace diskann {
   }
 
   size_t calculate_num_pq_chunks(double final_index_ram_limit, size_t points_num, uint32_t dim) {
-    size_t num_pq_chunks = (size_t) (std::floor)(_u64(final_index_ram_limit / (double) points_num));
+    size_t num_pq_chunks = (size_t)(std::floor)(_u64(final_index_ram_limit / (double) points_num));
 
     diskann::cout << "Calculated num_pq_chunks :" << num_pq_chunks << std::endl;
     num_pq_chunks = num_pq_chunks <= 0 ? 1 : num_pq_chunks;
@@ -763,7 +762,6 @@ namespace diskann {
 
     if (num_threads != 0) {
       omp_set_num_threads(num_threads);
-      mkl_set_num_threads(num_threads);
     }
 
     diskann::cout << "Starting index build: R=" << R << " L=" << L << " Query RAM budget: " << final_index_ram_limit

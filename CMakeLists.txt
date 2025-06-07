@@ -80,6 +80,7 @@ endif()
 
 add_definitions(
 	$ENV{ADDITIONAL_DEFINITIONS}
+	-DUSE_AIO
 	# optimizations.
 	-DOVERLAP_INIT
 	# -DDYN_PIPE_WIDTH
@@ -98,9 +99,30 @@ link_directories(
 	${PROJECT_SOURCE_DIR}/third_party/liburing/src
 )
 
-link_libraries(
-	uring
+include_directories(
+	${PROJECT_SOURCE_DIR}/third_party/gperftools/src
 )
+link_directories(
+	${PROJECT_SOURCE_DIR}/third_party/gperftools/build
+)
+
+find_library(AIO_LIBRARY
+    NAMES libaio.so.1 aio
+    PATHS /usr/lib /usr/lib/aarch64-linux-gnu /usr/local/lib
+    REQUIRED
+)
+if(NOT AIO_LIBRARY)
+    message(FATAL_ERROR "libaio.so.1 not found! Please install libaio-dev package.")
+else()
+    message(STATUS "Found libaio: ${AIO_LIBRARY}")
+endif()
+
+link_libraries(
+	aio
+    uring
+	${AIO_LIBRARY}
+)
+
 # add_compile_options(-fsanitize=address,undefined -lasan -lubsan)
 # add_link_options(-fsanitize=address,undefined)
 # add_compile_options(-fsanitize=undefined -lubsan)
@@ -142,14 +164,11 @@ if (MSVC)
 	checkEnvAndSetLocalVar("BOOST_ROOT" "Please install Boost (1.71 or greater) from www.boost.org and set the env var BOOST_ROOT to the boost directory." "BOOST_ROOT")
 
 else()
-	find_package(MKL)
-        add_compile_options(-m64 -Wl,--no-as-needed)
-	link_libraries(mkl_intel_ilp64 mkl_intel_thread mkl_core iomp5 pthread m dl rt)
-	link_directories(${INTEL_ROOT}/lib/intel64 ${MKL_ROOT}/lib/intel64)
+    find_package(OpenBLAS REQUIRED)
+    link_libraries(openblas pthread)
 endif()
 
-add_definitions(-DMKL_ILP64)
-include_directories(include ${INTEL_ROOT}/include ${MKL_ROOT}/include ${BOOST_ROOT})
+include_directories(include ${OPENBLAS_ROOT}/include ${BOOST_ROOT})
 
 
 #Main compiler/linker settings 

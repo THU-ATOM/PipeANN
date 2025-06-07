@@ -46,7 +46,9 @@ namespace diskann {
     // for pipe and coro, we use SQ polling for faster I/O issue.
     // Other search modes use synchronous I/O, so no need for SQ polling.
     this->sq_poll = (search_mode == SearchMode::PIPE_SEARCH || search_mode == SearchMode::CORO_SEARCH);
+#ifndef USE_AIO
     io_uring_flag = this->sq_poll ? IORING_SETUP_SQPOLL : 0;
+#endif
 
     LOG(INFO) << "Using search mode: " << search_mode << ", no_mapping: " << this->no_mapping
               << ", sq_poll: " << this->sq_poll;
@@ -384,7 +386,7 @@ namespace diskann {
 
     num_medoids = 1;
     medoids = new uint32_t[1];
-    medoids[0] = (_u32) (medoid_id_on_file);
+    medoids[0] = (_u32)(medoid_id_on_file);
     use_medoids_data_as_centroids();
     diskann::cout << "PQFlashIndex loaded successfully." << std::endl;
     return 0;

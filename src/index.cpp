@@ -179,7 +179,7 @@ namespace diskann {
       out.write((char *) &GK, sizeof(unsigned));
       out.write((char *) _final_graph[i].data(), GK * sizeof(unsigned));
       max_degree = _final_graph[i].size() > max_degree ? (_u32) _final_graph[i].size() : max_degree;
-      index_size += (_u64) (sizeof(unsigned) * (GK + 1));
+      index_size += (_u64)(sizeof(unsigned) * (GK + 1));
     }
     out.seekp(offset, out.beg);
     out.write((char *) &index_size, sizeof(uint64_t));
@@ -556,7 +556,7 @@ namespace diskann {
     }
     unsigned location = _tag_to_location[tag];
     // memory should be allocated for vec before calling this function
-    memcpy((void *) vec, (void *) (_data + (size_t) (location * _aligned_dim)), (size_t) _aligned_dim * sizeof(T));
+    memcpy((void *) vec, (void *) (_data + (size_t)(location * _aligned_dim)), (size_t) _aligned_dim * sizeof(T));
     return 0;
   }
 
@@ -568,7 +568,7 @@ namespace diskann {
       return nullptr;
     } else {
       unsigned location = _tag_to_location[tag];
-      return _data + (size_t) (location * _aligned_dim);
+      return _data + (size_t)(location * _aligned_dim);
     }
   }
 
@@ -904,7 +904,7 @@ namespace diskann {
       {
         LockGuard guard(_locks[des]);
         if (std::find(des_pool.begin(), des_pool.end(), n) == des_pool.end()) {
-          if (des_pool.size() < (_u64) (SLACK_FACTOR * range)) {
+          if (des_pool.size() < (_u64)(SLACK_FACTOR * range)) {
             des_pool.emplace_back(n);
             if (update_in_graph) {
               LockGuard guard(_locks_in[n]);
@@ -923,7 +923,7 @@ namespace diskann {
         tsl::robin_set<unsigned> dummy_visited(0);
         std::vector<Neighbor> dummy_pool(0);
 
-        size_t reserveSize = (size_t) (std::ceil(1.05 * SLACK_FACTOR * range));
+        size_t reserveSize = (size_t)(std::ceil(1.05 * SLACK_FACTOR * range));
         dummy_visited.reserve(reserveSize);
         dummy_pool.reserve(reserveSize);
 
@@ -1026,7 +1026,7 @@ namespace diskann {
     }
 
     for (uint64_t p = 0; p < _max_points + _num_frozen_pts; p++) {
-      _final_graph[p].reserve((size_t) (std::ceil(range * SLACK_FACTOR * 1.05)));
+      _final_graph[p].reserve((size_t)(std::ceil(range * SLACK_FACTOR * 1.05)));
     }
 
     std::random_device rd;
@@ -1124,7 +1124,7 @@ namespace diskann {
         }
 
 #pragma omp parallel for schedule(dynamic, 65536)
-        for (_s64 node_ctr = 0; node_ctr < (_s64) (visit_order.size()); node_ctr++) {
+        for (_s64 node_ctr = 0; node_ctr < (_s64)(visit_order.size()); node_ctr++) {
           auto node = visit_order[node_ctr];
           if (need_to_sync[node] != 0) {
             need_to_sync[node] = 0;
@@ -1182,7 +1182,7 @@ namespace diskann {
       diskann::cout << "Starting final cleanup.." << std::flush;
     }
 #pragma omp parallel for schedule(dynamic, 65536)
-    for (_s64 node_ctr = 0; node_ctr < (_s64) (visit_order.size()); node_ctr++) {
+    for (_s64 node_ctr = 0; node_ctr < (_s64)(visit_order.size()); node_ctr++) {
       auto node = visit_order[node_ctr];
       if (_final_graph[node].size() > range) {
         tsl::robin_set<unsigned> dummy_visited(0);
@@ -1215,7 +1215,7 @@ namespace diskann {
 
     diskann::Timer timer;
 #pragma omp parallel for
-    for (_s64 node = 0; node < (_s64) (_max_points + _num_frozen_pts); node++) {
+    for (_s64 node = 0; node < (_s64)(_max_points + _num_frozen_pts); node++) {
       if ((size_t) node < _nd || (size_t) node == _max_points) {
         if (_final_graph[node].size() > range) {
           tsl::robin_set<unsigned> dummy_visited(0);
@@ -1952,7 +1952,7 @@ namespace diskann {
       std::vector<Neighbor> result;
 
       for (_s64 i = block * block_size;
-           i < (_s64) ((block + 1) * block_size) && i < (_s64) (_max_points + _num_frozen_pts); i++) {
+           i < (_s64)((block + 1) * block_size) && i < (_s64)(_max_points + _num_frozen_pts); i++) {
         if ((_delete_set.find((_u32) i) == _delete_set.end()) && (_empty_slots.find((_u32) i) == _empty_slots.end())) {
           candidate_set.clear();
           expanded_nghrs.clear();
@@ -2356,7 +2356,7 @@ namespace diskann {
 
       std::cout << "Thread: " << std::this_thread::get_id() << " Obtained unique_lock. " << std::endl;
       if (_nd >= _max_points) {
-        auto new_max_points = (size_t) (_max_points * INDEX_GROWTH_FACTOR);
+        auto new_max_points = (size_t)(_max_points * INDEX_GROWTH_FACTOR);
         diskann::cerr << "Thread: " << std::this_thread::get_id() << ": Increasing _max_points from " << _max_points
                       << " to " << new_max_points << " _nd is: " << _nd << std::endl;
         resize(new_max_points);
@@ -2415,7 +2415,7 @@ namespace diskann {
 
     _final_graph[location].clear();
     _final_graph[location].shrink_to_fit();
-    _final_graph[location].reserve((_u64) (range * SLACK_FACTOR * 1.05));
+    _final_graph[location].reserve((_u64)(range * SLACK_FACTOR * 1.05));
 
     if (pruned_list.empty()) {
       std::cout << "Thread: " << std::this_thread::get_id() << "Tag id: " << tag
@@ -2514,7 +2514,7 @@ namespace diskann {
       return -1;
     }
     std::memset(ret_data, 0, (size_t) _aligned_dim * _nd * sizeof(T));
-    std::memcpy(ret_data, _data, (size_t) (_aligned_dim) *_nd * sizeof(T));
+    std::memcpy(ret_data, _data, (size_t)(_aligned_dim) *_nd * sizeof(T));
     tag_to_location = _tag_to_location;
     return 0;
   }

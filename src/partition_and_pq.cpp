@@ -214,7 +214,7 @@ template<typename T>
 int generate_pq_pivots(const std::unique_ptr<T[]> &passed_train_data, size_t num_train, unsigned dim,
                        unsigned num_centers, unsigned num_pq_chunks, unsigned max_k_means_reps,
                        std::string pq_pivots_path) {
-  std::unique_ptr<float[]> train_float = std::make_unique<float[]>(num_train * (size_t) (dim));
+  std::unique_ptr<float[]> train_float = std::make_unique<float[]>(num_train * (size_t)(dim));
   float *flt_ptr = train_float.get();
   T *T_ptr = passed_train_data.get();
 
@@ -694,7 +694,7 @@ int shard_data_into_clusters(const std::string data_file, float *pivots, const s
     for (size_t p = 0; p < cur_blk_size; p++) {
       for (size_t p1 = 0; p1 < k_base; p1++) {
         size_t shard_id = block_closest_centers[p * k_base + p1];
-        uint32_t original_point_map_id = (uint32_t) (start_id + p);
+        uint32_t original_point_map_id = (uint32_t)(start_id + p);
         shard_data_writer[shard_id].write((char *) (block_data_T.get() + p * dim), sizeof(T) * dim);
         shard_idmap_writer[shard_id].write((char *) &original_point_map_id, sizeof(uint32_t));
         shard_counts[shard_id]++;
