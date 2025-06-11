@@ -80,7 +80,7 @@ endif()
 
 add_definitions(
 	$ENV{ADDITIONAL_DEFINITIONS}
-	-DUSE_AIO
+	-DUSE_AIO # use AIO instead of io uring (better compatibility, worse performance)
 	# optimizations.
 	-DOVERLAP_INIT
 	# -DDYN_PIPE_WIDTH
