@@ -25,3 +25,7 @@ minutes=$(( (total_time % 3600) / 60 ))
 seconds=$((total_time % 60))
 
 echo "$task_start_time -> $task_end_time, $hours hours, $minutes minutes, $seconds seconds"
+
+# for SIFT100M, assume that the dataset is at /mnt/nvme/data/bigann/100M.bbin, the query is at /mnt/nvme/data/bigann/bigann_query.bbin 
+# output: /mnt/nvme/data/bigann/100M_gt.bin
+.build/tests/utils/compute_groundtruth float ../test/test.bin ../ 1000 /mnt/nvme/data/bigann/100M_gt.bin
