@@ -240,8 +240,11 @@ int generate_pq_pivots(const float *passed_train_data, size_t num_train, unsigne
 
   for (uint64_t i = 0; i < num_train; i++) {
     for (uint64_t j = 0; j < dim; j++) {
-      if (passed_train_data[i * dim + j] != train_data[i * dim + j])
-        diskann::cerr << "error in copy" << std::endl;
+      float a = passed_train_data[i * dim + j];
+      float b = train_data[i * dim + j];
+      if (std::fabs(a - b) > 1e-6f) {
+        diskann::cerr << "error in copy at [" << i << "," << j << "]: " << a << " vs " << b << std::endl;
+      }
     }
   }
 
