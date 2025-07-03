@@ -58,6 +58,7 @@ int search_disk_index(int argc, char **argv) {
   _u32 beamwidth = std::atoi(argv[index++]);
   std::string query_bin(argv[index++]);
   std::string truthset_bin(argv[index++]);
+  std::string result_output_prefix(argv[index++]);
   _u64 recall_at = std::atoi(argv[index++]);
   std::string dist_metric(argv[index++]);
   int search_mode = std::atoi(argv[index++]);
@@ -249,6 +250,18 @@ int search_disk_index(int argc, char **argv) {
   for (uint32_t test_id = 0; test_id < Lvec.size(); test_id++) {
     run_tests(test_id, true);
   }
+
+  uint64_t test_id = 0;
+  for (auto L : Lvec) {
+    if (L < recall_at) {
+      continue;
+    }
+    std::string cur_result_path = result_output_prefix + "_" + std::to_string(L) + "_idx_uint32.bin";
+    diskann::save_bin<uint32_t>(cur_result_path, query_result_tags[test_id].data(), query_num, recall_at);
+    cur_result_path = result_output_prefix + "_" + std::to_string(L) + "_dists_float.bin";
+    diskann::save_bin<float>(cur_result_path, query_result_dists[test_id++].data(), query_num, recall_at);
+  }
+  LOG(INFO) << "Save result to " << result_output_prefix << " finished.";
   return 0;
 }
 
@@ -258,7 +271,7 @@ int main(int argc, char **argv) {
     diskann::cout << "Usage: " << argv[0]
                   << " <index_type (float/int8/uint8)>  <index_prefix_path>"
                      " <num_threads>  <pipeline width> "
-                     " <query_file.bin>  <truthset.bin (use \"null\" for none)> "
+                     " <query_file.bin>  <truthset.bin (use \"null\" for none)> <result_output_prefix>"
                      " <K> <similarity (cosine/l2)> "
                      " <search_mode(0 for beam search / 1 for page search / 2 for pipe search)> <mem_L (0 means not "
                      "using mem index)> <L1> [L2] etc."
